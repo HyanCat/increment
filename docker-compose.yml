@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+    app:
+        build: .
+        ports:
+            - "3000:3000"
+        links:
+            - redis
+        networks:
+            - increment
+        restart: always
+    redis:
+        image: redis:alpine
+        volumes:
+            - v_redis:/data
+        networks:
+            - increment
+        restart: always
+        command: redis-server --requirepass secret --protected-mode no
+
+networks:
+    increment:
+        driver: "bridge"
+
+volumes:
+    v_redis:
+        driver: "local"
