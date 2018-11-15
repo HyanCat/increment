@@ -29,7 +29,9 @@ app.use(
 )
 
 app.use(async ctx => {
-    await redis.incr('increment:id')
+    const appName = ctx.query.app
+    const key = appName ? `increment:id:${appName}` : 'increment:id:global'
+    await redis.incr(key)
         .then(v => {
             console.log(v)
             ctx.body = v
